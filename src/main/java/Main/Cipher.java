@@ -1,58 +1,91 @@
 package Main;
 
 public class Cipher {
-    public String generateKey(String orgText, String key){
+    public String generateKey(String orgText, String key) {
         int l = orgText.length();
 
-        for (int i=0, j=0; j < l ;i++){
-            if(i == l){
+        for (int i = 0, j = 0; j < l; i++) {
+            if (i == l) {
                 i = 0;
             }
-            if(key.length() < l){
+            if (key.length() < l) {
                 key += key.charAt(i);
             }
             j++;
         }
-        key = key.toUpperCase();
+        key = key.toLowerCase();
         return key;
     }
-    public String encryption(String orgText, String key){
 
-        String encrText = "";
+    public String encrypt(String orgText, String key) {
+        StringBuilder encryptedText = new StringBuilder();
+        int keyIndex = 0;
+        for (char c : orgText.toCharArray()) {
+            int keyShift = key.charAt(keyIndex) - 'a';
+            int textChar = c;
 
-        orgText = orgText.toUpperCase();
-
-        for(int i = 0, j = 0; i < orgText.length(); i++){
-            char c = orgText.charAt(i);
             if (Character.isLetter(c)) {
-                int x = (orgText.charAt(i) + key.charAt(i)) % 26;
-                x += 'A';
-                encrText += (char) (x);
+                if (Character.isUpperCase(c)) {
+                    textChar = (c + keyShift - 'A') % 26 + 'A';
+                } else {
+                    textChar = (c + keyShift - 'a') % 26 + 'a';
+                }
+            } else if (Character.isDigit(c)) {
+                textChar = (c + keyShift - '0') % 10 + '0';
+            } else if (Character.getType(c) == Character.OTHER_PUNCTUATION ||
+                    Character.getType(c) == Character.MATH_SYMBOL) {
+                textChar = (c + keyShift - 33) % 15 + 33;
             }
-            else{
-                encrText += c;
-            }
-        }
-        return encrText;
 
+            encryptedText.append((char) textChar);
+
+            keyIndex = (keyIndex + 1) % key.length();
+        }
+
+        return encryptedText.toString();
     }
-    public String decryption(String encrText, String key){
 
-        String orgText = "";
+    public String decrypt(String encrText, String key) {
+        StringBuilder decryptedText = new StringBuilder();
 
-        encrText = encrText.toUpperCase();
+        int keyIndex = 0;
+        for (char c : encrText.toCharArray()) {
+            int shift = key.charAt(keyIndex) - 'a';
+            int textChar = c;
 
-        for (int i = 0; i < encrText.length(); i++){
-            char c = encrText.charAt(i);
-            if(Character.isLetter(c)) {
-                int y = (encrText.charAt(i) - key.charAt(i) + 26) % 26;
-                y += 'A';
-                orgText += (char) (y);
+            if (Character.isLetter(c)) {
+                if (Character.isUpperCase(c)) {
+                    textChar = (c - shift - 'A') % 26;
+                    if (textChar < 0) {
+                        textChar += 26;
+                    }
+                    textChar += 'A';
+                } else {
+                    textChar = (c - shift - 'a') % 26;
+                    if (textChar < 0) {
+                        textChar += 26;
+                    }
+                    textChar += 'a';
+                }
+            } else if (Character.isDigit(c)) {
+                textChar = (c - shift - '0') % 10;
+                if (textChar < 0) {
+                    textChar += 10;
+                }
+                textChar += '0';
+            } else if (Character.getType(c) == Character.OTHER_PUNCTUATION || Character.getType(c) == Character.MATH_SYMBOL) {
+                textChar = (c - shift - 33) % 15;
+                if (textChar < 0) {
+                    textChar += 15;
+                }
+                textChar += 33;
             }
-            else{
-                orgText+=c;
-            }
+
+            decryptedText.append((char) textChar);
+
+            keyIndex = (keyIndex + 1) % key.length();
         }
-        return orgText;
+
+        return decryptedText.toString();
     }
 }

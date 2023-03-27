@@ -13,9 +13,7 @@ public class Window extends JFrame{
     private JTextField textFieldEncr;
     private JButton encryptButton;
     private JButton decryptButton;
-    private JLabel keyLabel;
-    private JLabel OrgTextLabel;
-    private JLabel encrTextLabel;
+    private JLabel keyLabel, OrgTextLabel, encrTextLabel;
 
     Cipher action = new Cipher();
 
@@ -47,14 +45,14 @@ public class Window extends JFrame{
         String orgText = textFieldOrg.getText();
         String key = action.generateKey(orgText, textFieldKey.getText());
 
-        String encrText = action.encryption(orgText,key);
+        String encrText = action.encrypt(orgText,key);
         setText(encrText, textFieldEncr);
     }
     public void decryptText(){
         String encrText = textFieldEncr.getText();
         String key = action.generateKey(encrText, textFieldKey.getText());
 
-        String decryptedText = action.decryption(encrText,key);
+        String decryptedText = action.decrypt(encrText,key);
         setText(decryptedText, textFieldOrg);
     }
     public void setText(String encrText, JTextField field){

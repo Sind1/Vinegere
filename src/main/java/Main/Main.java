@@ -5,13 +5,16 @@ import Frame.Window;
 public class Main {
     public static void main(String[] args) {
         new Window();
+        
         Cipher m = new Cipher();
-        String f = m.generateKey("SINDIJA TAMULYTE", "HEYO");
-        String encr = m.encryption("SINDIJA TAMULYTE", f);
-        String f2 = m.generateKey(encr, "HEYO");
-        String org = m.decryption(encr, f2);
+        String text = "Sindija !!";
+        String f = m.generateKey(text, "key");
+        String encr = m.encrypt(text, f);
+        String org = m.decrypt(encr, f);
 
+        System.out.println("Original: " +text);
+        System.out.println("Key: " + f);
         System.out.println("Encrypted: " + encr);
-        System.out.println("decrip: " + org);
+        System.out.println("Decripted: " + org);
     }
 }
